@@ -8,7 +8,7 @@ use Gpxcat\LaravelAccessLog\Models\AccessLog;
 use Illuminate\Http\Request;
 use Log;
 
-class HandleAccessLog
+class AccessLogHandle
 {
     /**
      * Handle an incoming request.
