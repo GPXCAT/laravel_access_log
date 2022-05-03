@@ -45,10 +45,11 @@ class AccessLogHandle
                     'input' => $request->input(),
                     'ip' => $request->ip(),
                 ];
-                Log::info('ACCESSLOG - ' . json_encode($data, JSON_UNESCAPED_UNICODE));
 
                 $data['input'] = $this->removeBase64Data($data['input']);
                 $data['input'] = $this->removePasswordData($data['input']);
+                Log::info('ACCESSLOG - ' . json_encode($data, JSON_UNESCAPED_UNICODE));
+
                 try {
                     $accessLogRow = AccessLog::create($data);
                 } catch (\Illuminate\Database\QueryException $ex) {
