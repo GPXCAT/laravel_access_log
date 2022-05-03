@@ -2,9 +2,9 @@
 
 namespace Gpxcat\LaravelAccessLog\Http\Middleware;
 
-use App\Models\AccessLog;
 use Auth;
 use Closure;
+use Gpxcat\LaravelAccessLog\Models\AccessLog;
 use Illuminate\Http\Request;
 use Log;
 
