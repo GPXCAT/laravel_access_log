@@ -19,29 +19,41 @@ class AccessLogHandle
      */
     public function handle(Request $request, Closure $next)
     {
-        $skipMethod = collect(explode(',', env('ACCESS_LOG_SKIP_METHOD', '')))->map(function ($item) {
-            return trim($item);
-        })->toArray();
+        if (filter_var(env('ACCESS_LOG', 0), FILTER_VALIDATE_BOOLEAN)) {
+            $skipMethod = collect(explode(',', env('ACCESS_LOG_SKIP_METHOD', '')))->map(function ($item) {
+                return trim($item);
+            })->toArray();
 
-        if (!in_array($request->method(), $skipMethod)) {
-            $data = [
-                'employee_id' => Auth::user() ? Auth::user()->id : null,
-                'member_id' => Auth::guard('mobile_web')->user() ? Auth::guard('mobile_web')->user()->id : null,
-                'method' => $request->method(),
-                'url' => $request->url(),
-                'referer' => $request->header()['referer'] ?? null,
-                'user_agent' => $request->userAgent() ?? '',
-                'input' => $request->input(),
-                'ip' => $request->ip(),
-            ];
-            Log::info('ACCESSLOG - ' . json_encode($data, JSON_UNESCAPED_UNICODE));
+            $guards = [];
+            collect(config('auth.guards'))->each(function ($value, $key) use (&$guards) {
+                $auth = auth()->guard($key)->hasUser() ? Auth::guard($key)->user() : null;
+                if ($auth) {
+                    $guards[$key] = [$auth->getKeyName() => $auth->{$auth->getKeyName()}]; // $auth->{($value['log_show_column'] ?? $auth->getKeyName())};
+                    if (isset($value['log_show_column'])) {
+                        $guards[$key][$value['log_show_column']] = $auth->{$value['log_show_column']};
+                    }
+                }
+            });
 
-            $data['input'] = $this->removeBase64Data($data['input']);
-            $data['input'] = $this->removePasswordData($data['input']);
-            try {
-                $accessLogRow = AccessLog::create($data);
-            } catch (\Illuminate\Database\QueryException $ex) {
-                Log::error('ACCESSLOG - 無法寫入DB - ' . $ex->getMessage());
+            if (!in_array($request->method(), $skipMethod)) {
+                $data = [
+                    'guards' => $guards,
+                    'method' => $request->method(),
+                    'url' => $request->url(),
+                    'referer' => $request->header()['referer'] ?? null,
+                    'user_agent' => $request->userAgent() ?? '',
+                    'input' => $request->input(),
+                    'ip' => $request->ip(),
+                ];
+                Log::info('ACCESSLOG - ' . json_encode($data, JSON_UNESCAPED_UNICODE));
+
+                $data['input'] = $this->removeBase64Data($data['input']);
+                $data['input'] = $this->removePasswordData($data['input']);
+                try {
+                    $accessLogRow = AccessLog::create($data);
+                } catch (\Illuminate\Database\QueryException $ex) {
+                    Log::error('ACCESSLOG - 無法寫入DB - ' . $ex->getMessage());
+                }
             }
         }
 

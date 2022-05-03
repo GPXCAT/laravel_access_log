@@ -12,8 +12,7 @@ class AccessLog extends Model
      * @var array
      */
     protected $fillable = [
-        'employee_id',
-        'member_id',
+        'guards',
         'method',
         'url',
         'referer',
@@ -28,6 +27,7 @@ class AccessLog extends Model
      * @var array
      */
     protected $casts = [
+        'guards' => 'array',
         'referer' => 'array',
         'input' => 'array',
     ];

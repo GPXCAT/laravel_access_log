@@ -1,5 +1,21 @@
 # gpxcat's laravel_access_log
 
+migrate:
+
+```
+php artisan migrate
+```
+
+Add the environment variable to your `.env` file:
+
+```
+# 是否記錄(總開關)
+ACCESS_LOG=1
+
+# 設定不要記錄的ACCESSLOG用逗號 ex GET,HEAD
+ACCESS_LOG_SKIP_METHOD=GET
+```
+
 Add the routeMiddleware to your `app/Http/Kernel.php` file:
 
 ```
