@@ -21,7 +21,7 @@ class CreateAccessLogsTable extends Migration
             $table->text('referer')->nullable(true)->comment('參照來源');
             $table->string('user_agent')->nullable(false)->default('')->comment('User-Agent');
             $table->text('input')->nullable(true)->comment('輸入參數');
-            $table->string('ip', 15)->nullable(false)->default('')->comment('來源IP');
+            $table->string('ip', 50)->nullable(false)->default('')->comment('來源IP');
             $table->timestamps();
         });
     }
