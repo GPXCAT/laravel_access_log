@@ -28,7 +28,7 @@ class AccessLogHandle
             collect(config('auth.guards'))->each(function ($value, $key) use (&$guards) {
                 $auth = auth()->guard($key)->user() ? Auth::guard($key)->user() : null;
                 if ($auth) {
-                    $guards[$key] = [$auth->getKeyName() => $auth->{$auth->getKeyName()}]; // $auth->{($value['log_show_column'] ?? $auth->getKeyName())};
+                    $guards[$key] = [$auth->getKeyName() => $auth->{$auth->getKeyName()}];
                     if (isset($value['log_show_column'])) {
                         $guards[$key][$value['log_show_column']] = $auth->{$value['log_show_column']};
                     }
