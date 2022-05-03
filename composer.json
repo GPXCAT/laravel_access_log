@@ -1,0 +1,21 @@
+{
+    "name": "gpxcat/laravel_access_log",
+    "description": "自製的 Laravel HTTP 傳輸記錄",
+    "type": "library",
+    "authors": [
+        {
+            "name": "John",
+            "email": "john.chang@starnic.com.tw"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+        "laravel": {}
+    },
+    "autoload": {
+        "psr-4": {
+            "Gpxcat\\LaravelAccessLog\\": "src/"
+        }
+    }
+}
