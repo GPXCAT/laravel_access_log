@@ -11,7 +11,11 @@
     "minimum-stability": "dev",
     "require": {},
     "extra": {
-        "laravel": {}
+        "laravel": {
+            "providers": [
+                "Gpxcat\\LaravelAccessLog\\Providers\\AccessLogServiceProvider"
+            ]
+        }
     },
     "autoload": {
         "psr-4": {

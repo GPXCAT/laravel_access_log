@@ -1,13 +1,27 @@
-# gpxcat's laravel_log_formatter
+# gpxcat's laravel_access_log
 
-Add the config to your `config/logging.php` file:
+Add the routeMiddleware to your `app/Http/Kernel.php` file:
 
 ```
-    'daily' => [
-            'driver' => 'daily',
-            'path' => storage_path('logs/laravel.log'),
-            'level' => env('LOG_LEVEL', 'debug'),
-            'days' => 14,
-            'tap' => [\Gpxcat\LaravelLogFormatter\Formatter::class],
-        ],
+    protected $routeMiddleware = [
+        ...
+        'accesslog.handle' => \Gpxcat\LaravelAccessLog\Http\Middleware\AccessLogHandle::class,
+        ...
+    ];
+
+```
+
+Add the middleware to your `routes/web.php` or `routes/api.php` file:
+
+```
+
+Route::group([
+    'prefix' => 'XXXX',
+    'middleware' => [
+        'accesslog.handle',
+    ],
+], function () {
+    ...
+});
+
 ```
